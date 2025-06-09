@@ -1,7 +1,7 @@
 # selfphp/data-converter
 
 > A lightweight and extensible PHP library to convert structured data between formats.  
-> **Currently supports:** array → XML and XML → array conversion.
+> **Currently supports:** array → XML, XML → array and array ↔ JSON conversion.
 
 ---
 
@@ -9,6 +9,8 @@
 
 - ✅ Convert associative arrays to XML
 - ✅ Convert XML to associative arrays
+- ✅ Convert arrays to JSON (with optional flags)
+- ✅ Convert JSON strings to associative arrays
 - ✅ Custom root element name
 - ✅ Optional XML declaration
 - ✅ Null → `xsi:nil` conversion
@@ -76,6 +78,30 @@ print_r($array);
 // ]
 ```
 
+### Array to JSON
+
+```php
+use Selfphp\DataConverter\Format\ArrayToJsonConverter;
+
+$data = ['url' => 'https://example.com'];
+
+$converter = (new ArrayToJsonConverter())
+    ->withFlags(JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+echo $converter->convert($data);
+```
+
+### JSON to Array
+
+```php
+use Selfphp\DataConverter\Format\JsonToArrayConverter;
+
+$json = '{"name":"Alice","active":true}';
+
+$converter = new JsonToArrayConverter();
+$array = $converter->convert($json);
+```
+
 ---
 
 ## 🧪 Tests
@@ -94,12 +120,16 @@ vendor/bin/phpunit --testdox
 src/
 └── Format/
     ├── ArrayToXmlConverter.php
-    └── XmlToArrayConverter.php
+    ├── XmlToArrayConverter.php
+    ├── ArrayToJsonConverter.php
+    └── JsonToArrayConverter.php
 
 tests/
 └── Format/
     ├── ArrayToXmlConverterTest.php
-    └── XmlToArrayConverterTest.php
+    ├── XmlToArrayConverterTest.php
+    ├── ArrayToJsonConverterTest.php
+    └── JsonToArrayConverterTest.php
 ```
 
 ---
@@ -145,6 +175,7 @@ If you encounter any of these scenarios in real-world data, feel free to contrib
 ## 🛠 Planned
 
 - [x] XML → Array
+- [x] JSON ↔ Array
 - [ ] JSON ↔ XML
 - [ ] CLI support (`php convert input.json`)
 - [ ] Stream support
